@@ -1,0 +1,154 @@
+{
+  "name": "linear-manager",
+  "displayName": "Linear Manager",
+  "description": "Manage Linear issues, projects, and cycles directly inside Cursor / VS Code.",
+  "version": "0.2.0",
+  "publisher": "mayank",
+  "author": {
+    "name": "Mayank Panchal"
+  },
+  "icon": "resources/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": ["Other", "SCM Providers"],
+  "keywords": ["linear", "issues", "project-management", "cursor"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "linearManager",
+          "title": "Linear",
+          "icon": "resources/linear.svg"
+        }
+      ]
+    },
+    "views": {
+      "linearManager": [
+        { "id": "linear.myIssues", "name": "My Issues", "icon": "$(person)" },
+        { "id": "linear.createdByMe", "name": "Created by Me", "icon": "$(edit)" },
+        { "id": "linear.teams", "name": "My Teams" },
+        { "id": "linear.projects", "name": "My Projects" },
+        { "id": "linear.cycles", "name": "Current Cycle" },
+        { "id": "linear.favorites", "name": "Favorites" }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "linear.myIssues",
+        "when": "!linearManager.signedIn",
+        "contents": "Sign in to see your Linear workspace.\n[Use personal API key (recommended)](command:linear.signInApiKey)\n[Sign in with OAuth](command:linear.signInOAuth)\n\nAPI keys never expire. OAuth sessions renew automatically."
+      },
+      {
+        "view": "linear.myIssues",
+        "when": "linearManager.signedIn",
+        "contents": "[Open Developer Dashboard](command:linear.openDashboard)\n\nA personal home for the signed-in developer — issues, cycles, and quick actions in one place."
+      }
+    ],
+    "commands": [
+      { "command": "linear.signInOAuth", "title": "Linear: Sign in with OAuth" },
+      { "command": "linear.signInApiKey", "title": "Linear: Sign in with Personal API Key" },
+      { "command": "linear.signOut", "title": "Linear: Sign out" },
+      { "command": "linear.refresh", "title": "Linear: Refresh", "icon": "$(refresh)" },
+      { "command": "linear.openDashboard", "title": "Linear: Open Developer Dashboard", "icon": "$(dashboard)" },
+      { "command": "linear.createIssue", "title": "Linear: Create Issue", "icon": "$(add)" },
+      { "command": "linear.openIssue", "title": "Linear: Open Issue" },
+      { "command": "linear.openIssueInBrowser", "title": "Linear: Open Issue in Browser", "icon": "$(link-external)" },
+      { "command": "linear.searchIssues", "title": "Linear: Search Issues", "icon": "$(search)" },
+      { "command": "linear.updateStatus", "title": "Linear: Change Status" },
+      { "command": "linear.updatePriority", "title": "Linear: Change Priority" },
+      { "command": "linear.updateAssignee", "title": "Linear: Change Assignee" },
+      { "command": "linear.updateLabels", "title": "Linear: Edit Labels" },
+      { "command": "linear.addComment", "title": "Linear: Add Comment" },
+      { "command": "linear.copyBranchName", "title": "Linear: Copy Git Branch Name" },
+      { "command": "linear.createBranch", "title": "Linear: Create & Checkout Git Branch" },
+      { "command": "linear.attachCodeReference", "title": "Linear: Attach Selected Code to Issue" },
+      { "command": "linear.createIssueFromSelection", "title": "Linear: Create Issue from Selection" },
+      { "command": "linear.favoriteIssue", "title": "Linear: Toggle Favorite" }
+    ],
+    "menus": {
+      "view/title": [
+        { "command": "linear.openDashboard", "when": "view =~ /linear\\./", "group": "navigation@1" },
+        { "command": "linear.createIssue", "when": "view =~ /linear\\./", "group": "navigation@2" },
+        { "command": "linear.searchIssues", "when": "view =~ /linear\\./", "group": "navigation@3" },
+        { "command": "linear.refresh", "when": "view =~ /linear\\./", "group": "navigation@4" }
+      ],
+      "view/item/context": [
+        { "command": "linear.openIssue", "when": "viewItem == linearIssue", "group": "inline@1" },
+        { "command": "linear.openIssueInBrowser", "when": "viewItem == linearIssue", "group": "inline@2" },
+        { "command": "linear.updateStatus", "when": "viewItem == linearIssue", "group": "1_edit@1" },
+        { "command": "linear.updatePriority", "when": "viewItem == linearIssue", "group": "1_edit@2" },
+        { "command": "linear.updateAssignee", "when": "viewItem == linearIssue", "group": "1_edit@3" },
+        { "command": "linear.updateLabels", "when": "viewItem == linearIssue", "group": "1_edit@4" },
+        { "command": "linear.addComment", "when": "viewItem == linearIssue", "group": "2_actions@1" },
+        { "command": "linear.copyBranchName", "when": "viewItem == linearIssue", "group": "3_git@1" },
+        { "command": "linear.createBranch", "when": "viewItem == linearIssue", "group": "3_git@2" },
+        { "command": "linear.favoriteIssue", "when": "viewItem == linearIssue", "group": "4_meta@1" }
+      ],
+      "editor/context": [
+        { "command": "linear.createIssueFromSelection", "when": "editorHasSelection", "group": "linear@1" },
+        { "command": "linear.attachCodeReference", "when": "editorHasSelection", "group": "linear@2" }
+      ]
+    },
+    "configuration": {
+      "title": "Linear Manager",
+      "properties": {
+        "linearManager.oauth.clientId": {
+          "type": "string",
+          "default": "",
+          "description": "Linear OAuth application client ID. Create one at https://linear.app/settings/api/applications"
+        },
+        "linearManager.oauth.redirectPort": {
+          "type": "number",
+          "default": 51823,
+          "description": "Local HTTP port used for the OAuth redirect. Must match the redirect URI in your Linear OAuth application (http://localhost:PORT/callback)."
+        },
+        "linearManager.oauth.scopes": {
+          "type": "string",
+          "default": "read,write,issues:create,comments:create",
+          "description": "Comma-separated OAuth scopes to request."
+        },
+        "linearManager.defaultTeam": {
+          "type": "string",
+          "default": "",
+          "description": "Default team key (e.g. ENG) for new issues. If empty, you will be prompted."
+        },
+        "linearManager.branchNameTemplate": {
+          "type": "string",
+          "default": "{username}/{identifier}-{slug}",
+          "description": "Git branch template. Placeholders: {identifier}, {slug}, {title}, {username}, {team}."
+        },
+        "linearManager.showStatusBar": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the current git branch's Linear issue in the status bar."
+        },
+        "linearManager.pollIntervalSeconds": {
+          "type": "number",
+          "default": 120,
+          "description": "How often to refresh issue lists in the background. 0 disables polling."
+        }
+      }
+    },
+    "keybindings": [
+      { "command": "linear.searchIssues", "key": "ctrl+alt+l", "mac": "cmd+alt+l" },
+      { "command": "linear.createIssue", "key": "ctrl+alt+shift+l", "mac": "cmd+alt+shift+l" }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "@linear/sdk": "^27.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  }
+}
