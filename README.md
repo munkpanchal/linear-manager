@@ -93,3 +93,15 @@ linear-manager/
     ├── statusBar.ts      current-branch issue indicator
     └── util.ts           quick-picks, git helpers, branch formatting
 ```
+
+## From the developer
+
+Built by **Mayank Panchal**.
+
+I use Linear every day and got tired of hopping between the browser and my editor just to check status, create an issue, or open the ticket tied to my branch. Cursor already talks to Linear through MCP for the agent — this extension is the missing UI: a real sidebar, a proper issue editor, and git-aware shortcuts that stay out of your way.
+
+Sessions are meant to stick. Prefer a personal API key if you want sign-in-once forever; OAuth renews itself with refresh tokens so you aren’t kicked out every day.
+
+If something breaks, feels slow, or you’d like a feature — open an issue on this repo. PRs are welcome.
+
+— Mayank
