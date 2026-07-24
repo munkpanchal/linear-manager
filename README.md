@@ -31,12 +31,26 @@ npm run compile
 
 Open the folder in Cursor / VS Code and press `F5` to launch a new Extension Development Host with Linear Manager loaded.
 
-To build a shareable `.vsix`:
+To build a shareable `.vsix` locally:
 
 ```bash
 npm i -g @vscode/vsce
 vsce package
 ```
+
+### GitHub release (automated)
+
+Pushing a version tag builds the VSIX and publishes a GitHub Release:
+
+```bash
+# bump "version" in package.json first, then:
+git add package.json
+git commit -m "Release v0.2.0"
+git tag v0.2.0
+git push origin main --tags
+```
+
+The workflow in `.github/workflows/release.yml` runs on tags matching `v*` and uploads the `.vsix` to the release.
 
 ## Sign in
 

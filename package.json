@@ -7,6 +7,14 @@
   "author": {
     "name": "Mayank Panchal"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/munkpanchal/linear-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/munkpanchal/linear-manager/issues"
+  },
+  "homepage": "https://github.com/munkpanchal/linear-manager#readme",
   "icon": "resources/icon.png",
   "engines": {
     "vscode": "^1.85.0"
